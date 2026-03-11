@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gen AI Concepts Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family: Arial, Helvetica, sans-serif;
+background: linear-gradient(135deg,#0f172a,#020617);
+color:white;
+margin:0;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.container{
+width:90%;
+max-width:800px;
+background:#111827;
+padding:30px;
+border-radius:12px;
+box-shadow:0 0 25px rgba(0,0,0,0.6);
+}
+
+h1{
+text-align:center;
+margin-bottom:25px;
+color:#38bdf8;
+}
+
+.question{
+font-size:20px;
+margin-bottom:20px;
+}
+
+.option{
+background:#1f2937;
+padding:12px;
+margin:8px 0;
+border-radius:6px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.option:hover{
+background:#334155;
+}
+
+.option.selected{
+background:#2563eb;
+}
+
+button{
+margin-top:20px;
+padding:12px 20px;
+background:#22c55e;
+border:none;
+border-radius:6px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#16a34a;
+}
+
+.result{
+text-align:center;
+font-size:22px;
+}
+
+.correct{
+color:#22c55e;
+}
+
+.wrong{
+color:#ef4444;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Gen AI Concepts Quiz</h1>
+
+<div id="quiz"></div>
+
+<button id="nextBtn">Next</button>
+
+</div>
+
+<script>
+
+const quizData = [
+
+{
+q:"1. Which system generates replies in a chatbot like GPT?",
+options:["ML algorithm","LLM","Neo4j","Docker","CNN"],
+answer:1
+},
+
+{
+q:"2. Classifying emails as spam or important uses:",
+options:["Prompt engineering","Image classification","Graph query","Container orchestration","Encoding"],
+answer:0
+},
+
+{
+q:"3. Zero-shot prompting means:",
+options:["Many examples","One example","No examples","Two examples","Model retraining"],
+answer:2
+},
+
+{
+q:"4. Giving one example before prediction is:",
+options:["Zero-shot","One-shot","Few-shot","Chain-of-thought","Reinforcement"],
+answer:1
+},
+
+{
+q:"5. Showing reasoning steps uses:",
+options:["Zero-shot","Few-shot","Chain-of-thought","Encoding","Sampling"],
+answer:2
+},
+
+{
+q:"6. Embeddings convert text into:",
+options:["Images","Numerical vectors","Graph nodes","Tokens","Databases"],
+answer:1
+},
+
+{
+q:"7. Finding similar sentences uses:",
+options:["Random Forest","Embeddings","CNN","Decision Tree","Logistic"],
+answer:1
+},
+
+{
+q:"8. AI analyzing X-ray images uses:",
+options:["CNN","RNN","LSTM","Transformer","KNN"],
+answer:0
+},
+
+{
+q:"9. Model for sequential text:",
+options:["CNN","RNN","Decision Tree","Logistic","Random Forest"],
+answer:1
+},
+
+{
+q:"10. Modern GenAI models use:",
+options:["CNN","RNN","Transformer","Decision Tree","K-Means"],
+answer:2
+},
+
+{
+q:"11. Transformer key idea:",
+options:["Pooling","Attention","Gradient descent","Scaling","Clustering"],
+answer:1
+},
+
+{
+q:"12. Best database for relationships:",
+options:["SQL","Graph DB","Document DB","Key-value","Column"],
+answer:1
+},
+
+{
+q:"13. Graph database from notes:",
+options:["MySQL","MongoDB","Neo4j","Redis","Cassandra"],
+answer:2
+},
+
+{
+q:"14. Entities in Neo4j:",
+options:["Tables","Nodes","Queries","Threads","Containers"],
+answer:1
+},
+
+{
+q:"15. Connections in Neo4j:",
+options:["Properties","Nodes","Relations","Queries","Tables"],
+answer:2
+},
+
+{
+q:"16. Tool that packages applications:",
+options:["Kubernetes","Docker","Neo4j","GPT","CNN"],
+answer:1
+},
+
+{
+q:"17. Tool managing many containers:",
+options:["Flask","Kubernetes","Git","Jenkins","MySQL"],
+answer:1
+},
+
+{
+q:"18. Kubernetes manages:",
+options:["Databases","Containers across nodes","Neural networks","Graph queries","Prompts"],
+answer:1
+},
+
+{
+q:"19. Prompt style that reasons and acts:",
+options:["Zero-shot","One-shot","ReAct","Few-shot","Sampling"],
+answer:2
+},
+
+{
+q:"20. Generative AI mainly:",
+options:["Training databases","Generating text","Running containers","Classifying images","Managing clusters"],
+answer:1
+}
+
+];
+
+let current=0;
+let score=0;
+let selected=null;
+
+const quiz=document.getElementById("quiz");
+const nextBtn=document.getElementById("nextBtn");
+
+function loadQuestion(){
+
+selected=null;
+
+let q=quizData[current];
+
+let html=`<div class="question">${q.q}</div>`;
+
+q.options.forEach((opt,i)=>{
+
+html+=`<div class="option" onclick="selectOption(this,${i})">${opt}</div>`;
+
+});
+
+quiz.innerHTML=html;
+
+}
+
+function selectOption(el,index){
+
+document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
+
+el.classList.add("selected");
+
+selected=index;
+
+}
+
+nextBtn.onclick=function(){
+
+if(selected===null){
+alert("Select an option");
+return;
+}
+
+if(selected===quizData[current].answer){
+score++;
+}
+
+current++;
+
+if(current<quizData.length){
+loadQuestion();
+}
+else{
+showResult();
+}
+
+}
+
+function showResult(){
+
+quiz.innerHTML=`
+<div class="result">
+<h2>Your Score</h2>
+<p>${score} / ${quizData.length}</p>
+</div>
+`;
+
+nextBtn.style.display="none";
+
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
