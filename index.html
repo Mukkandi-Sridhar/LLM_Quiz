@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RAG AI Quiz</title>
+<title>RAG Concepts Quiz</title>
 
 <style>
 
@@ -50,7 +50,7 @@ margin-bottom:30px;
 height:10px;
 width:0%;
 background:linear-gradient(90deg,#22c55e,#4ade80);
-transition:0.3s;
+transition:width 0.5s;
 }
 
 .question{
@@ -59,23 +59,25 @@ margin-bottom:25px;
 text-align:center;
 }
 
-.visual{
-display:flex;
-justify-content:center;
-margin-bottom:25px;
-}
-
 .pipeline{
 display:flex;
-gap:20px;
+justify-content:center;
 align-items:center;
-font-size:14px;
+gap:15px;
+margin-bottom:30px;
 }
 
 .step{
 padding:10px 15px;
-background:#1e293b;
 border-radius:8px;
+background:#1e293b;
+font-size:14px;
+transition:0.3s;
+}
+
+.step.active{
+background:#2563eb;
+transform:scale(1.1);
 }
 
 .arrow{
@@ -130,6 +132,12 @@ button:hover{
 background:#16a34a;
 }
 
+.explanation{
+margin-top:15px;
+text-align:center;
+color:#94a3b8;
+}
+
 .result{
 text-align:center;
 font-size:26px;
@@ -148,6 +156,20 @@ font-size:26px;
 <div class="bar" id="bar"></div>
 </div>
 
+<div class="pipeline">
+
+<div class="step" id="s0">Query</div>
+<div class="arrow">→</div>
+<div class="step" id="s1">Retriever</div>
+<div class="arrow">→</div>
+<div class="step" id="s2">Vector DB</div>
+<div class="arrow">→</div>
+<div class="step" id="s3">LLM</div>
+<div class="arrow">→</div>
+<div class="step" id="s4">Answer</div>
+
+</div>
+
 <div id="quiz"></div>
 
 <button id="next">Next</button>
@@ -161,31 +183,41 @@ const data=[
 {
 q:"Which architecture retrieves documents before generating answers?",
 options:["RAG","CNN","GAN","Decision Tree"],
-a:0
+a:0,
+stage:1,
+exp:"RAG retrieves relevant documents before the LLM generates a response."
 },
 
 {
 q:"Which component finds relevant documents from a vector database?",
 options:["Retriever","Tokenizer","Trainer","Optimizer"],
-a:0
+a:0,
+stage:1,
+exp:"The retriever searches the vector database to find relevant context."
 },
 
 {
-q:"What converts text into vectors for similarity search?",
+q:"What converts text into vectors for semantic search?",
 options:["Embedding model","Generator","Prompt template","Tokenizer"],
-a:0
+a:0,
+stage:2,
+exp:"Embedding models convert text into vectors used for similarity search."
 },
 
 {
 q:"Which system stores embeddings for semantic search?",
 options:["Vector database","Relational database","Spreadsheet","Cache"],
-a:0
+a:0,
+stage:2,
+exp:"Vector databases store embeddings so retrievers can search them efficiently."
 },
 
 {
 q:"Which stage generates the final answer for the user?",
 options:["LLM Generator","Retriever","Vector Store","Embedding model"],
-a:0
+a:0,
+stage:3,
+exp:"The LLM reads retrieved context and generates the final response."
 }
 
 ]
@@ -198,42 +230,29 @@ const quiz=document.getElementById("quiz")
 const next=document.getElementById("next")
 const bar=document.getElementById("bar")
 
+function highlight(stage){
+
+document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"))
+
+document.getElementById("s"+stage).classList.add("active")
+
+}
+
 function load(){
 
 selected=null
 
 let q=data[i]
 
-let html=`
+highlight(q.stage)
 
-<div class="question">${q.q}</div>
-
-<div class="visual">
-
-<div class="pipeline">
-
-<div class="step">User Query</div>
-<div class="arrow">→</div>
-<div class="step">Retriever</div>
-<div class="arrow">→</div>
-<div class="step">Vector DB</div>
-<div class="arrow">→</div>
-<div class="step">LLM</div>
-<div class="arrow">→</div>
-<div class="step">Answer</div>
-
-</div>
-
-</div>
-
-<div class="options">
-`
+let html=`<div class="question">${q.q}</div><div class="options">`
 
 q.options.forEach((o,index)=>{
 html+=`<div class="option" onclick="select(this,${index})">${o}</div>`
 })
 
-html+=`</div>`
+html+=`</div><div class="explanation" id="exp"></div>`
 
 quiz.innerHTML=html
 
@@ -258,15 +277,18 @@ alert("Choose an option")
 return
 }
 
+let q=data[i]
 let opts=document.querySelectorAll(".option")
 
-if(selected===data[i].a){
+if(selected===q.a){
 score++
 opts[selected].classList.add("correct")
 }else{
 opts[selected].classList.add("wrong")
-opts[data[i].a].classList.add("correct")
+opts[q.a].classList.add("correct")
 }
+
+document.getElementById("exp").innerText=q.exp
 
 setTimeout(()=>{
 
@@ -278,7 +300,7 @@ load()
 show()
 }
 
-},800)
+},1200)
 
 }
 
