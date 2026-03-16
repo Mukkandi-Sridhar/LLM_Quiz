@@ -2,77 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RAG Concepts Quiz</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG AI Quiz</title>
 
 <style>
 
-body{
-font-family:Arial;
-background:linear-gradient(135deg,#0f172a,#020617);
-color:white;
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+background:linear-gradient(135deg,#020617,#0f172a,#020617);
+color:white;
 }
 
 .container{
-width:90%;
-max-width:900px;
-background:#111827;
-padding:30px;
-border-radius:12px;
-box-shadow:0 0 25px rgba(0,0,0,0.6);
+width:900px;
+max-width:95%;
+padding:40px;
+border-radius:16px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(12px);
+box-shadow:0 0 30px rgba(0,0,0,0.6);
 }
 
 h1{
 text-align:center;
 color:#38bdf8;
-margin-bottom:10px;
-}
-
-.progress{
-height:8px;
-background:#1f2937;
-border-radius:10px;
-overflow:hidden;
 margin-bottom:25px;
 }
 
-.progress-bar{
-height:8px;
-background:#22c55e;
+.progress{
+height:10px;
+background:#1e293b;
+border-radius:10px;
+overflow:hidden;
+margin-bottom:30px;
+}
+
+.bar{
+height:10px;
 width:0%;
+background:linear-gradient(90deg,#22c55e,#4ade80);
+transition:0.3s;
 }
 
 .question{
-font-size:20px;
-margin-bottom:15px;
-}
-
-.image{
+font-size:22px;
+margin-bottom:25px;
 text-align:center;
-margin-bottom:15px;
 }
 
-.image img{
-max-width:100%;
+.visual{
+display:flex;
+justify-content:center;
+margin-bottom:25px;
+}
+
+.pipeline{
+display:flex;
+gap:20px;
+align-items:center;
+font-size:14px;
+}
+
+.step{
+padding:10px 15px;
+background:#1e293b;
 border-radius:8px;
 }
 
+.arrow{
+font-size:20px;
+color:#38bdf8;
+}
+
+.options{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
 .option{
-background:#1f2937;
-padding:12px;
-margin:8px 0;
-border-radius:6px;
+background:#1e293b;
+padding:15px;
+border-radius:10px;
 cursor:pointer;
 transition:0.2s;
 }
 
 .option:hover{
 background:#334155;
+transform:scale(1.03);
 }
 
 .option.selected{
@@ -88,11 +115,12 @@ background:#dc2626;
 }
 
 button{
-margin-top:20px;
-padding:12px 20px;
+margin-top:25px;
+width:100%;
+padding:14px;
 background:#22c55e;
 border:none;
-border-radius:6px;
+border-radius:10px;
 color:white;
 font-size:16px;
 cursor:pointer;
@@ -104,7 +132,7 @@ background:#16a34a;
 
 .result{
 text-align:center;
-font-size:22px;
+font-size:26px;
 }
 
 </style>
@@ -117,178 +145,160 @@ font-size:22px;
 <h1>RAG Concepts Quiz</h1>
 
 <div class="progress">
-<div class="progress-bar" id="progressBar"></div>
+<div class="bar" id="bar"></div>
 </div>
 
 <div id="quiz"></div>
 
-<button id="nextBtn">Next</button>
+<button id="next">Next</button>
 
 </div>
 
 <script>
 
-const quizData=[
+const data=[
 
 {
-q:"What architecture combines document retrieval with LLM generation?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*RAG_pipeline.png",
+q:"Which architecture retrieves documents before generating answers?",
 options:["RAG","CNN","GAN","Decision Tree"],
-answer:0
+a:0
 },
 
 {
-q:"Which step converts text into vectors for semantic search?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*embedding_vectors.png",
-options:["Embedding","Tokenization","Compression","Scaling"],
-answer:0
-},
-
-{
-q:"Which database is designed to store embeddings for similarity search?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*vector_database.png",
-options:["Vector DB","Relational DB","Spreadsheet","File Storage"],
-answer:0
-},
-
-{
-q:"What process splits large documents into smaller pieces before embedding?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*document_chunking.png",
-options:["Chunking","Sharding","Sampling","Normalization"],
-answer:0
-},
-
-{
-q:"Which stage finds relevant documents using similarity search?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*retriever_stage.png",
+q:"Which component finds relevant documents from a vector database?",
 options:["Retriever","Tokenizer","Trainer","Optimizer"],
-answer:0
+a:0
 },
 
 {
-q:"Which model generates the final answer in a RAG pipeline?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*llm_generation.png",
-options:["LLM","Database","Vector Store","Embedding Model"],
-answer:0
+q:"What converts text into vectors for similarity search?",
+options:["Embedding model","Generator","Prompt template","Tokenizer"],
+a:0
 },
 
 {
-q:"Which similarity metric is widely used in vector search?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*cosine_similarity.png",
-options:["Cosine similarity","Binary search","Sorting","Linear regression"],
-answer:0
+q:"Which system stores embeddings for semantic search?",
+options:["Vector database","Relational database","Spreadsheet","Cache"],
+a:0
 },
 
 {
-q:"What main problem does RAG reduce in LLM responses?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*hallucination_ai.png",
-options:["Hallucination","Overfitting","Gradient explosion","GPU crash"],
-answer:0
-},
-
-{
-q:"What step happens first when building a RAG knowledge base?",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*document_ingestion.png",
-options:["Document ingestion","Generation","Prompt tuning","Training"],
-answer:0
-},
-
-{
-q:"RAG stands for:",
-img:"https://miro.medium.com/v2/resize:fit:1200/1*rag_architecture.png",
-options:["Retrieval Augmented Generation","Random AI Graph","Rapid Auto Generation","Recursive AI Generator"],
-answer:0
+q:"Which stage generates the final answer for the user?",
+options:["LLM Generator","Retriever","Vector Store","Embedding model"],
+a:0
 }
 
-];
+]
 
-let current=0;
-let score=0;
-let selected=null;
+let i=0
+let score=0
+let selected=null
 
-const quiz=document.getElementById("quiz");
-const nextBtn=document.getElementById("nextBtn");
-const progressBar=document.getElementById("progressBar");
+const quiz=document.getElementById("quiz")
+const next=document.getElementById("next")
+const bar=document.getElementById("bar")
 
-function loadQuestion(){
+function load(){
 
-selected=null;
+selected=null
 
-let q=quizData[current];
+let q=data[i]
 
-let html=`<div class="question">${q.q}</div>`;
+let html=`
 
-if(q.img){
-html+=`<div class="image"><img src="${q.img}"></div>`;
-}
+<div class="question">${q.q}</div>
 
-q.options.forEach((opt,i)=>{
-html+=`<div class="option" onclick="selectOption(this,${i})">${opt}</div>`;
-});
+<div class="visual">
 
-quiz.innerHTML=html;
+<div class="pipeline">
 
-progressBar.style.width=((current)/quizData.length*100)+"%";
-}
+<div class="step">User Query</div>
+<div class="arrow">→</div>
+<div class="step">Retriever</div>
+<div class="arrow">→</div>
+<div class="step">Vector DB</div>
+<div class="arrow">→</div>
+<div class="step">LLM</div>
+<div class="arrow">→</div>
+<div class="step">Answer</div>
 
-function selectOption(el,index){
+</div>
 
-document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
+</div>
 
-el.classList.add("selected");
+<div class="options">
+`
 
-selected=index;
+q.options.forEach((o,index)=>{
+html+=`<div class="option" onclick="select(this,${index})">${o}</div>`
+})
+
+html+=`</div>`
+
+quiz.innerHTML=html
+
+bar.style.width=(i/data.length*100)+"%"
 
 }
 
-nextBtn.onclick=function(){
+function select(el,index){
+
+document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"))
+
+el.classList.add("selected")
+
+selected=index
+
+}
+
+next.onclick=function(){
 
 if(selected===null){
-alert("Select an option");
-return;
+alert("Choose an option")
+return
 }
 
-const options=document.querySelectorAll(".option");
+let opts=document.querySelectorAll(".option")
 
-if(selected===quizData[current].answer){
-score++;
-options[selected].classList.add("correct");
+if(selected===data[i].a){
+score++
+opts[selected].classList.add("correct")
 }else{
-options[selected].classList.add("wrong");
-options[quizData[current].answer].classList.add("correct");
+opts[selected].classList.add("wrong")
+opts[data[i].a].classList.add("correct")
 }
 
 setTimeout(()=>{
 
-current++;
+i++
 
-if(current<quizData.length){
-loadQuestion();
+if(i<data.length){
+load()
 }else{
-showResult();
+show()
 }
 
-},800);
+},800)
 
 }
 
-function showResult(){
+function show(){
 
-progressBar.style.width="100%";
+bar.style.width="100%"
 
 quiz.innerHTML=`
 <div class="result">
-<h2>Your Score</h2>
-<p>${score} / ${quizData.length}</p>
-<button onclick="location.reload()">Restart Quiz</button>
+Score: ${score} / ${data.length}
+<br><br>
+<button onclick="location.reload()">Restart</button>
 </div>
-`;
+`
 
-nextBtn.style.display="none";
+next.style.display="none"
 
 }
 
-loadQuestion();
+load()
 
 </script>
 
