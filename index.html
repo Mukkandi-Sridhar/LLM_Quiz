@@ -95,122 +95,122 @@ font-size:22px;
 const quizData = [
 
 {
-q:"1. A company builds an AI assistant that answers user questions automatically. Which technology powers it?",
-options:["LLM","Docker","Neo4j","CNN","SQL"],
+q:"1. A chatbot answers questions using company documents stored in a database. Which architecture is commonly used?",
+options:["RAG","GAN","CNN","Decision Tree","Autoencoder"],
 answer:0
 },
 
 {
-q:"2. A recruiter wants AI to automatically categorize emails as 'Important' or 'Spam'. What is this task called?",
-options:["Classification","Clustering","Regression","Translation","Rendering"],
+q:"2. In a RAG system, what is the main purpose of retrieval?",
+options:["Find relevant documents before generation","Train the LLM","Compress the model","Increase GPU speed","Create embeddings"],
 answer:0
 },
 
 {
-q:"3. Asking an AI question without giving any example is called:",
-options:["One-shot prompting","Few-shot prompting","Zero-shot prompting","Chain prompting","Training"],
-answer:2
-},
-
-{
-q:"4. Providing two or more examples before asking the model is:",
-options:["Zero-shot","Few-shot","One-shot","Random prompting","Embedding"],
-answer:1
-},
-
-{
-q:"5. If an AI explains step-by-step reasoning before answering, it is using:",
-options:["Few-shot prompting","Chain-of-thought prompting","Embedding","Tokenization","Sampling"],
-answer:1
-},
-
-{
-q:"6. When AI converts the word 'Hello' into numbers for training, this process is:",
-options:["Encoding","Compression","Scaling","Normalization","Clustering"],
+q:"3. When documents are converted into vectors for similarity search, what process is used?",
+options:["Embedding","Tokenization","Compression","Normalization","Augmentation"],
 answer:0
 },
 
 {
-q:"7. A recommendation engine finds similar sentences using:",
-options:["Embeddings","Decision trees","Random forests","CNN","Logistic regression"],
+q:"4. Which type of database is typically used in RAG systems to store embeddings?",
+options:["Vector database","Relational database","Graph database","Spreadsheet","File storage"],
 answer:0
 },
 
 {
-q:"8. AI detecting objects in images typically uses:",
-options:["CNN","RNN","LSTM","Naive Bayes","K-Means"],
+q:"5. Which tool is commonly used as a vector database?",
+options:["Pinecone","MySQL","Oracle","PostgreSQL","Redis"],
 answer:0
 },
 
 {
-q:"9. Which neural network is commonly used for processing sequences of text?",
-options:["RNN","CNN","Decision Tree","Random Forest","Gradient Boosting"],
+q:"6. In RAG, splitting large documents into smaller pieces before embedding is called:",
+options:["Chunking","Sharding","Clustering","Scaling","Sampling"],
 answer:0
 },
 
 {
-q:"10. GPT models are based on which architecture?",
-options:["Transformer","CNN","RNN","GAN","Autoencoder"],
+q:"7. What problem does RAG mainly help reduce in LLMs?",
+options:["Hallucinations","Overfitting","Gradient explosion","GPU overheating","Data imbalance"],
 answer:0
 },
 
 {
-q:"11. Transformers mainly rely on which mechanism?",
-options:["Attention","Pooling","Normalization","Clustering","Filtering"],
+q:"8. In the RAG pipeline, which step happens after retrieval?",
+options:["Context is sent to LLM for generation","Model training","Database indexing","Embedding creation","Model compression"],
 answer:0
 },
 
 {
-q:"12. A social network storing users and connections should use:",
-options:["Graph database","Relational database","File storage","Cache","Spreadsheet"],
+q:"9. Which similarity method is commonly used to retrieve relevant vectors?",
+options:["Cosine similarity","Binary search","Sorting","Graph traversal","Linear regression"],
 answer:0
 },
 
 {
-q:"13. Which database from your notes is used for graph relationships?",
-options:["Neo4j","MySQL","MongoDB","Redis","Oracle"],
+q:"10. If a user asks a question and the system retrieves the most relevant chunks before sending them to the LLM, this stage is called:",
+options:["Context augmentation","Model fine-tuning","Token pruning","Hyperparameter tuning","Data labeling"],
 answer:0
 },
 
 {
-q:"14. In Neo4j, a user account is represented as:",
-options:["Node","Table","Container","Token","Instance"],
+q:"11. Which framework is commonly used to build RAG pipelines?",
+options:["LangChain","NumPy","Matplotlib","Scikit-learn","Pandas"],
 answer:0
 },
 
 {
-q:"15. In Neo4j, a relationship like 'follows' is called:",
-options:["Relation","Property","Column","Key","Cluster"],
+q:"12. In RAG, embeddings are used mainly to:",
+options:["Measure semantic similarity","Train the neural network","Optimize GPU memory","Increase token length","Improve UI design"],
 answer:0
 },
 
 {
-q:"16. A developer wants an app to run the same on laptop and server. Which tool helps?",
-options:["Docker","Neo4j","Flask","TensorFlow","NumPy"],
+q:"13. What happens if chunk size is too large in a RAG system?",
+options:["Relevant info may be diluted","LLM becomes faster","Database shrinks","Embeddings disappear","Model retrains"],
 answer:0
 },
 
 {
-q:"17. Managing hundreds of containers across many servers requires:",
-options:["Kubernetes","Git","MySQL","Jenkins","Redis"],
+q:"14. What happens if chunk size is too small?",
+options:["Loss of context","Model becomes inaccurate","GPU memory crashes","Database stops working","LLM retrains"],
 answer:0
 },
 
 {
-q:"18. Kubernetes mainly manages:",
-options:["Containers across machines","Databases","Training models","Prompting","Vector search"],
+q:"15. Which stage converts text chunks into vector representations?",
+options:["Embedding model","Retriever","Generator","Vector store","Prompt template"],
 answer:0
 },
 
 {
-q:"19. A system where AI reasons and performs actions is using:",
-options:["ReAct prompting","Zero-shot prompting","Embedding","Regression","Fine tuning"],
+q:"16. Which stage finds the most relevant documents?",
+options:["Retriever","Generator","Tokenizer","Optimizer","Trainer"],
 answer:0
 },
 
 {
-q:"20. Generative AI is mainly used for:",
-options:["Generating text","Managing servers","Running containers","Creating databases","Building hardware"],
+q:"17. Which component generates the final answer in RAG?",
+options:["LLM generator","Vector database","Embedding model","Retriever","Chunker"],
+answer:0
+},
+
+{
+q:"18. A system that answers questions over PDFs using embeddings and vector search is an example of:",
+options:["RAG application","Image classification","Reinforcement learning","GAN training","Speech recognition"],
+answer:0
+},
+
+{
+q:"19. Which step happens first when building a RAG knowledge base?",
+options:["Document ingestion","Answer generation","Query rewriting","Similarity search","Prompt execution"],
+answer:0
+},
+
+{
+q:"20. RAG stands for:",
+options:["Retrieval Augmented Generation","Recursive AI Graph","Random Access Generation","Reinforced Agent Generation","Rapid AI Graph"],
 answer:0
 }
 
