@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Gen AI Concepts Quiz</title>
+<title>RAG Concepts Quiz</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
 body{
-font-family: Arial, Helvetica, sans-serif;
-background: linear-gradient(135deg,#0f172a,#020617);
+font-family:Arial;
+background:linear-gradient(135deg,#0f172a,#020617);
 color:white;
 margin:0;
 display:flex;
 justify-content:center;
 align-items:center;
-min-height:100vh;
+height:100vh;
 }
 
 .container{
 width:90%;
-max-width:800px;
+max-width:900px;
 background:#111827;
 padding:30px;
 border-radius:12px;
@@ -29,13 +29,37 @@ box-shadow:0 0 25px rgba(0,0,0,0.6);
 
 h1{
 text-align:center;
-margin-bottom:25px;
 color:#38bdf8;
+margin-bottom:10px;
+}
+
+.progress{
+height:8px;
+background:#1f2937;
+border-radius:10px;
+overflow:hidden;
+margin-bottom:25px;
+}
+
+.progress-bar{
+height:8px;
+background:#22c55e;
+width:0%;
 }
 
 .question{
 font-size:20px;
-margin-bottom:20px;
+margin-bottom:15px;
+}
+
+.image{
+text-align:center;
+margin-bottom:15px;
+}
+
+.image img{
+max-width:100%;
+border-radius:8px;
 }
 
 .option{
@@ -53,6 +77,14 @@ background:#334155;
 
 .option.selected{
 background:#2563eb;
+}
+
+.option.correct{
+background:#16a34a;
+}
+
+.option.wrong{
+background:#dc2626;
 }
 
 button{
@@ -82,7 +114,11 @@ font-size:22px;
 
 <div class="container">
 
-<h1>Gen AI Concepts Quiz</h1>
+<h1>RAG Concepts Quiz</h1>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
 
 <div id="quiz"></div>
 
@@ -92,125 +128,75 @@ font-size:22px;
 
 <script>
 
-const quizData = [
+const quizData=[
 
 {
-q:"1. A chatbot answers questions using company documents stored in a database. Which architecture is commonly used?",
-options:["RAG","GAN","CNN","Decision Tree","Autoencoder"],
+q:"What architecture combines document retrieval with LLM generation?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*RAG_pipeline.png",
+options:["RAG","CNN","GAN","Decision Tree"],
 answer:0
 },
 
 {
-q:"2. In a RAG system, what is the main purpose of retrieval?",
-options:["Find relevant documents before generation","Train the LLM","Compress the model","Increase GPU speed","Create embeddings"],
+q:"Which step converts text into vectors for semantic search?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*embedding_vectors.png",
+options:["Embedding","Tokenization","Compression","Scaling"],
 answer:0
 },
 
 {
-q:"3. When documents are converted into vectors for similarity search, what process is used?",
-options:["Embedding","Tokenization","Compression","Normalization","Augmentation"],
+q:"Which database is designed to store embeddings for similarity search?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*vector_database.png",
+options:["Vector DB","Relational DB","Spreadsheet","File Storage"],
 answer:0
 },
 
 {
-q:"4. Which type of database is typically used in RAG systems to store embeddings?",
-options:["Vector database","Relational database","Graph database","Spreadsheet","File storage"],
+q:"What process splits large documents into smaller pieces before embedding?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*document_chunking.png",
+options:["Chunking","Sharding","Sampling","Normalization"],
 answer:0
 },
 
 {
-q:"5. Which tool is commonly used as a vector database?",
-options:["Pinecone","MySQL","Oracle","PostgreSQL","Redis"],
+q:"Which stage finds relevant documents using similarity search?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*retriever_stage.png",
+options:["Retriever","Tokenizer","Trainer","Optimizer"],
 answer:0
 },
 
 {
-q:"6. In RAG, splitting large documents into smaller pieces before embedding is called:",
-options:["Chunking","Sharding","Clustering","Scaling","Sampling"],
+q:"Which model generates the final answer in a RAG pipeline?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*llm_generation.png",
+options:["LLM","Database","Vector Store","Embedding Model"],
 answer:0
 },
 
 {
-q:"7. What problem does RAG mainly help reduce in LLMs?",
-options:["Hallucinations","Overfitting","Gradient explosion","GPU overheating","Data imbalance"],
+q:"Which similarity metric is widely used in vector search?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*cosine_similarity.png",
+options:["Cosine similarity","Binary search","Sorting","Linear regression"],
 answer:0
 },
 
 {
-q:"8. In the RAG pipeline, which step happens after retrieval?",
-options:["Context is sent to LLM for generation","Model training","Database indexing","Embedding creation","Model compression"],
+q:"What main problem does RAG reduce in LLM responses?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*hallucination_ai.png",
+options:["Hallucination","Overfitting","Gradient explosion","GPU crash"],
 answer:0
 },
 
 {
-q:"9. Which similarity method is commonly used to retrieve relevant vectors?",
-options:["Cosine similarity","Binary search","Sorting","Graph traversal","Linear regression"],
+q:"What step happens first when building a RAG knowledge base?",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*document_ingestion.png",
+options:["Document ingestion","Generation","Prompt tuning","Training"],
 answer:0
 },
 
 {
-q:"10. If a user asks a question and the system retrieves the most relevant chunks before sending them to the LLM, this stage is called:",
-options:["Context augmentation","Model fine-tuning","Token pruning","Hyperparameter tuning","Data labeling"],
-answer:0
-},
-
-{
-q:"11. Which framework is commonly used to build RAG pipelines?",
-options:["LangChain","NumPy","Matplotlib","Scikit-learn","Pandas"],
-answer:0
-},
-
-{
-q:"12. In RAG, embeddings are used mainly to:",
-options:["Measure semantic similarity","Train the neural network","Optimize GPU memory","Increase token length","Improve UI design"],
-answer:0
-},
-
-{
-q:"13. What happens if chunk size is too large in a RAG system?",
-options:["Relevant info may be diluted","LLM becomes faster","Database shrinks","Embeddings disappear","Model retrains"],
-answer:0
-},
-
-{
-q:"14. What happens if chunk size is too small?",
-options:["Loss of context","Model becomes inaccurate","GPU memory crashes","Database stops working","LLM retrains"],
-answer:0
-},
-
-{
-q:"15. Which stage converts text chunks into vector representations?",
-options:["Embedding model","Retriever","Generator","Vector store","Prompt template"],
-answer:0
-},
-
-{
-q:"16. Which stage finds the most relevant documents?",
-options:["Retriever","Generator","Tokenizer","Optimizer","Trainer"],
-answer:0
-},
-
-{
-q:"17. Which component generates the final answer in RAG?",
-options:["LLM generator","Vector database","Embedding model","Retriever","Chunker"],
-answer:0
-},
-
-{
-q:"18. A system that answers questions over PDFs using embeddings and vector search is an example of:",
-options:["RAG application","Image classification","Reinforcement learning","GAN training","Speech recognition"],
-answer:0
-},
-
-{
-q:"19. Which step happens first when building a RAG knowledge base?",
-options:["Document ingestion","Answer generation","Query rewriting","Similarity search","Prompt execution"],
-answer:0
-},
-
-{
-q:"20. RAG stands for:",
-options:["Retrieval Augmented Generation","Recursive AI Graph","Random Access Generation","Reinforced Agent Generation","Rapid AI Graph"],
+q:"RAG stands for:",
+img:"https://miro.medium.com/v2/resize:fit:1200/1*rag_architecture.png",
+options:["Retrieval Augmented Generation","Random AI Graph","Rapid Auto Generation","Recursive AI Generator"],
 answer:0
 }
 
@@ -222,6 +208,7 @@ let selected=null;
 
 const quiz=document.getElementById("quiz");
 const nextBtn=document.getElementById("nextBtn");
+const progressBar=document.getElementById("progressBar");
 
 function loadQuestion(){
 
@@ -231,14 +218,17 @@ let q=quizData[current];
 
 let html=`<div class="question">${q.q}</div>`;
 
+if(q.img){
+html+=`<div class="image"><img src="${q.img}"></div>`;
+}
+
 q.options.forEach((opt,i)=>{
-
 html+=`<div class="option" onclick="selectOption(this,${i})">${opt}</div>`;
-
 });
 
 quiz.innerHTML=html;
 
+progressBar.style.width=((current)/quizData.length*100)+"%";
 }
 
 function selectOption(el,index){
@@ -258,27 +248,39 @@ alert("Select an option");
 return;
 }
 
+const options=document.querySelectorAll(".option");
+
 if(selected===quizData[current].answer){
 score++;
+options[selected].classList.add("correct");
+}else{
+options[selected].classList.add("wrong");
+options[quizData[current].answer].classList.add("correct");
 }
+
+setTimeout(()=>{
 
 current++;
 
 if(current<quizData.length){
 loadQuestion();
-}
-else{
+}else{
 showResult();
 }
+
+},800);
 
 }
 
 function showResult(){
 
+progressBar.style.width="100%";
+
 quiz.innerHTML=`
 <div class="result">
 <h2>Your Score</h2>
 <p>${score} / ${quizData.length}</p>
+<button onclick="location.reload()">Restart Quiz</button>
 </div>
 `;
 
