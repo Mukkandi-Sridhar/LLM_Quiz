@@ -1,327 +1,616 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>RAG Concepts Quiz</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced RAG Concepts Quiz</title>
 
 <style>
-
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
 }
 
 body{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#020617,#0f172a,#020617);
-color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,0.15), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(34,197,94,0.12), transparent 30%),
+    linear-gradient(135deg,#020617,#0f172a,#111827);
+  color:white;
+  overflow:hidden;
+}
+
+body::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:rgba(59,130,246,0.15);
+  filter:blur(120px);
+  top:-120px;
+  left:-100px;
+  border-radius:50%;
+}
+
+body::after{
+  content:"";
+  position:absolute;
+  width:400px;
+  height:400px;
+  background:rgba(34,197,94,0.12);
+  filter:blur(120px);
+  bottom:-100px;
+  right:-80px;
+  border-radius:50%;
 }
 
 .container{
-width:900px;
-max-width:95%;
-padding:40px;
-border-radius:16px;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(12px);
-box-shadow:0 0 30px rgba(0,0,0,0.6);
+  position:relative;
+  z-index:2;
+  width:950px;
+  max-width:95%;
+  padding:38px;
+  border-radius:24px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  backdrop-filter:blur(18px);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 h1{
-text-align:center;
-color:#38bdf8;
-margin-bottom:25px;
+  text-align:center;
+  font-size:2.2rem;
+  font-weight:700;
+  color:#7dd3fc;
+  margin-bottom:10px;
+  letter-spacing:0.5px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#94a3b8;
+  margin-bottom:28px;
+  font-size:0.98rem;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  color:#cbd5e1;
+  font-size:14px;
 }
 
 .progress{
-height:10px;
-background:#1e293b;
-border-radius:10px;
-overflow:hidden;
-margin-bottom:30px;
+  height:12px;
+  background:#1e293b;
+  border-radius:999px;
+  overflow:hidden;
+  margin-bottom:30px;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.5);
 }
 
 .bar{
-height:10px;
-width:0%;
-background:linear-gradient(90deg,#22c55e,#4ade80);
-transition:width 0.5s;
-}
-
-.question{
-font-size:22px;
-margin-bottom:25px;
-text-align:center;
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#22c55e,#38bdf8,#6366f1);
+  transition:width 0.5s ease;
 }
 
 .pipeline{
-display:flex;
-justify-content:center;
-align-items:center;
-gap:15px;
-margin-bottom:30px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:35px;
 }
 
 .step{
-padding:10px 15px;
-border-radius:8px;
-background:#1e293b;
-font-size:14px;
-transition:0.3s;
+  padding:12px 18px;
+  border-radius:14px;
+  background:rgba(30,41,59,0.88);
+  border:1px solid rgba(255,255,255,0.06);
+  color:#cbd5e1;
+  font-size:14px;
+  transition:all 0.35s ease;
+  box-shadow:0 6px 20px rgba(0,0,0,0.25);
 }
 
 .step.active{
-background:#2563eb;
-transform:scale(1.1);
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  color:white;
+  transform:translateY(-3px) scale(1.05);
+  box-shadow:0 10px 30px rgba(56,189,248,0.35);
 }
 
 .arrow{
-font-size:20px;
-color:#38bdf8;
+  font-size:20px;
+  color:#38bdf8;
+  opacity:0.85;
+}
+
+.card{
+  animation:fadeUp 0.5s ease;
+  padding:28px;
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 10px 40px rgba(0,0,0,0.28);
+}
+
+.question{
+  font-size:1.45rem;
+  line-height:1.5;
+  margin-bottom:24px;
+  text-align:center;
+  font-weight:600;
+  color:#f8fafc;
 }
 
 .options{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
 }
 
 .option{
-background:#1e293b;
-padding:15px;
-border-radius:10px;
-cursor:pointer;
-transition:0.2s;
+  background:rgba(30,41,59,0.9);
+  padding:18px;
+  border-radius:16px;
+  cursor:pointer;
+  transition:all 0.25s ease;
+  border:1px solid rgba(255,255,255,0.06);
+  color:#e2e8f0;
+  font-size:15px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.18);
 }
 
 .option:hover{
-background:#334155;
-transform:scale(1.03);
+  transform:translateY(-4px) scale(1.02);
+  background:rgba(51,65,85,0.95);
+  box-shadow:0 12px 24px rgba(0,0,0,0.28);
 }
 
 .option.selected{
-background:#2563eb;
+  border:1px solid #38bdf8;
+  background:rgba(37,99,235,0.35);
+  box-shadow:0 0 0 1px rgba(56,189,248,0.3), 0 10px 22px rgba(37,99,235,0.2);
 }
 
 .option.correct{
-background:#16a34a;
+  background:rgba(22,163,74,0.28);
+  border:1px solid #22c55e;
+  color:#dcfce7;
 }
 
 .option.wrong{
-background:#dc2626;
+  background:rgba(220,38,38,0.28);
+  border:1px solid #ef4444;
+  color:#fee2e2;
+}
+
+.actions{
+  margin-top:24px;
+  display:flex;
+  gap:14px;
 }
 
 button{
-margin-top:25px;
-width:100%;
-padding:14px;
-background:#22c55e;
-border:none;
-border-radius:10px;
-color:white;
-font-size:16px;
-cursor:pointer;
+  flex:1;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  color:white;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.25s ease;
 }
 
-button:hover{
-background:#16a34a;
+#next{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  box-shadow:0 10px 24px rgba(34,197,94,0.3);
+}
+
+#next:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 28px rgba(34,197,94,0.4);
+}
+
+#quit{
+  background:linear-gradient(135deg,#475569,#334155);
+}
+
+#quit:hover{
+  transform:translateY(-2px);
 }
 
 .explanation{
-margin-top:15px;
-text-align:center;
-color:#94a3b8;
+  margin-top:18px;
+  text-align:center;
+  color:#cbd5e1;
+  line-height:1.6;
+  min-height:48px;
 }
 
 .result{
-text-align:center;
-font-size:26px;
+  text-align:center;
+  padding:20px 10px;
+  animation:fadeUp 0.6s ease;
 }
 
+.result h2{
+  font-size:2rem;
+  margin-bottom:10px;
+  color:#7dd3fc;
+}
+
+.result p{
+  color:#cbd5e1;
+  margin-bottom:10px;
+  font-size:1.05rem;
+}
+
+.score-ring{
+  width:140px;
+  height:140px;
+  margin:20px auto;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.8rem;
+  font-weight:700;
+  color:white;
+  background:conic-gradient(#22c55e var(--percent), rgba(255,255,255,0.08) 0);
+  position:relative;
+}
+
+.score-ring::after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  background:#0f172a;
+  border-radius:50%;
+  z-index:0;
+}
+
+.score-ring span{
+  position:relative;
+  z-index:2;
+}
+
+.result button{
+  margin-top:18px;
+  max-width:240px;
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  box-shadow:0 10px 24px rgba(37,99,235,0.35);
+}
+
+.result button:hover{
+  transform:translateY(-2px);
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(18px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@media(max-width:768px){
+  .question{
+    font-size:1.15rem;
+  }
+
+  .options{
+    grid-template-columns:1fr;
+  }
+
+  .pipeline{
+    gap:8px;
+  }
+
+  .step{
+    font-size:12px;
+    padding:10px 12px;
+  }
+
+  .container{
+    padding:22px;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+  <h1>Advanced RAG Concepts Quiz</h1>
+  <div class="subtitle">Test your understanding of retrieval, embeddings, ranking, grounding, and answer generation.</div>
 
-<h1>RAG Concepts Quiz</h1>
+  <div class="topbar">
+    <div class="badge" id="counter">Question 1 / 8</div>
+    <div class="badge" id="level">Level: Intermediate</div>
+    <div class="badge" id="scoreLive">Score: 0</div>
+  </div>
 
-<div class="progress">
-<div class="bar" id="bar"></div>
-</div>
+  <div class="progress">
+    <div class="bar" id="bar"></div>
+  </div>
 
-<div class="pipeline">
+  <div class="pipeline">
+    <div class="step" id="s0">Query</div>
+    <div class="arrow">→</div>
+    <div class="step" id="s1">Retriever</div>
+    <div class="arrow">→</div>
+    <div class="step" id="s2">Embeddings</div>
+    <div class="arrow">→</div>
+    <div class="step" id="s3">Vector DB</div>
+    <div class="arrow">→</div>
+    <div class="step" id="s4">LLM</div>
+    <div class="arrow">→</div>
+    <div class="step" id="s5">Answer</div>
+  </div>
 
-<div class="step" id="s0">Query</div>
-<div class="arrow">→</div>
-<div class="step" id="s1">Retriever</div>
-<div class="arrow">→</div>
-<div class="step" id="s2">Vector DB</div>
-<div class="arrow">→</div>
-<div class="step" id="s3">LLM</div>
-<div class="arrow">→</div>
-<div class="step" id="s4">Answer</div>
+  <div id="quiz"></div>
 
-</div>
-
-<div id="quiz"></div>
-
-<button id="next">Next</button>
-
+  <div class="actions">
+    <button id="quit">Quit</button>
+    <button id="next">Submit Answer</button>
+  </div>
 </div>
 
 <script>
+const data = [
+  {
+    q:"Why is chunking important in a RAG pipeline?",
+    options:[
+      "It reduces GPU temperature",
+      "It helps split documents into retrievable semantic units",
+      "It encrypts prompts before inference",
+      "It converts vectors back into images"
+    ],
+    a:1,
+    stage:2,
+    exp:"Chunking breaks documents into meaningful pieces so the retriever can fetch relevant context instead of entire large documents."
+  },
+  {
+    q:"What is the main purpose of embeddings in RAG?",
+    options:[
+      "To store chat history permanently",
+      "To translate answers into code",
+      "To represent text as vectors for semantic similarity search",
+      "To compress PDFs into ZIP files"
+    ],
+    a:2,
+    stage:2,
+    exp:"Embeddings convert text into vector form so semantically similar queries and passages can be matched."
+  },
+  {
+    q:"Which component usually performs nearest-neighbor search in a RAG system?",
+    options:[
+      "Vector database",
+      "Prompt template",
+      "Frontend UI",
+      "Tokenizer only"
+    ],
+    a:0,
+    stage:3,
+    exp:"The vector database indexes embeddings and performs similarity search to retrieve the closest chunks."
+  },
+  {
+    q:"Why might reranking be added after retrieval?",
+    options:[
+      "To reduce internet speed usage",
+      "To reorder retrieved chunks by deeper relevance",
+      "To convert text into SQL",
+      "To fine-tune the LLM every query"
+    ],
+    a:1,
+    stage:1,
+    exp:"Reranking helps improve result quality by sorting retrieved chunks using a stronger relevance signal."
+  },
+  {
+    q:"What problem does grounding help reduce in RAG-based generation?",
+    options:[
+      "Hallucination",
+      "Image resolution issues",
+      "Browser caching",
+      "Tokenization speed"
+    ],
+    a:0,
+    stage:4,
+    exp:"Grounding gives the LLM retrieved evidence so it is less likely to invent unsupported information."
+  },
+  {
+    q:"Which choice best describes top-k retrieval?",
+    options:[
+      "Fetching the k most relevant chunks",
+      "Training the model for k epochs",
+      "Generating k final answers at once",
+      "Deleting k low-quality documents"
+    ],
+    a:0,
+    stage:1,
+    exp:"Top-k retrieval selects a fixed number of most relevant chunks from the retriever output."
+  },
+  {
+    q:"What is a common reason for poor RAG answers even when the LLM is strong?",
+    options:[
+      "The monitor refresh rate is low",
+      "Bad retrieval quality or irrelevant context",
+      "The CSS design is weak",
+      "The browser has too many tabs open"
+    ],
+    a:1,
+    stage:1,
+    exp:"A strong LLM still fails if the retriever brings weak, noisy, or irrelevant context."
+  },
+  {
+    q:"In a typical RAG flow, what happens immediately before answer generation?",
+    options:[
+      "The retrieved context is injected into the prompt",
+      "The vector DB gets deleted",
+      "The frontend is redeployed",
+      "The chunk size becomes zero"
+    ],
+    a:0,
+    stage:4,
+    exp:"Before generation, the retrieved chunks are inserted into the prompt so the LLM can use them to answer."
+  }
+];
 
-const data=[
+let i = 0;
+let score = 0;
+let selected = null;
+let locked = false;
 
-{
-q:"Which architecture retrieves documents before generating answers?",
-options:["RAG","CNN","GAN","Decision Tree"],
-a:0,
-stage:1,
-exp:"RAG retrieves relevant documents before the LLM generates a response."
-},
-
-{
-q:"Which component finds relevant documents from a vector database?",
-options:["Retriever","Tokenizer","Trainer","Optimizer"],
-a:0,
-stage:1,
-exp:"The retriever searches the vector database to find relevant context."
-},
-
-{
-q:"What converts text into vectors for semantic search?",
-options:["Embedding model","Generator","Prompt template","Tokenizer"],
-a:0,
-stage:2,
-exp:"Embedding models convert text into vectors used for similarity search."
-},
-
-{
-q:"Which system stores embeddings for semantic search?",
-options:["Vector database","Relational database","Spreadsheet","Cache"],
-a:0,
-stage:2,
-exp:"Vector databases store embeddings so retrievers can search them efficiently."
-},
-
-{
-q:"Which stage generates the final answer for the user?",
-options:["LLM Generator","Retriever","Vector Store","Embedding model"],
-a:0,
-stage:3,
-exp:"The LLM reads retrieved context and generates the final response."
-}
-
-]
-
-let i=0
-let score=0
-let selected=null
-
-const quiz=document.getElementById("quiz")
-const next=document.getElementById("next")
-const bar=document.getElementById("bar")
+const quiz = document.getElementById("quiz");
+const next = document.getElementById("next");
+const quit = document.getElementById("quit");
+const bar = document.getElementById("bar");
+const counter = document.getElementById("counter");
+const scoreLive = document.getElementById("scoreLive");
 
 function highlight(stage){
-
-document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"))
-
-document.getElementById("s"+stage).classList.add("active")
-
+  document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+  const step = document.getElementById("s" + stage);
+  if(step) step.classList.add("active");
 }
 
 function load(){
+  selected = null;
+  locked = false;
 
-selected=null
+  const q = data[i];
+  highlight(q.stage);
 
-let q=data[i]
+  counter.textContent = `Question ${i+1} / ${data.length}`;
+  scoreLive.textContent = `Score: ${score}`;
+  bar.style.width = (i / data.length * 100) + "%";
+  next.textContent = "Submit Answer";
 
-highlight(q.stage)
+  let html = `
+    <div class="card">
+      <div class="question">${q.q}</div>
+      <div class="options">
+  `;
 
-let html=`<div class="question">${q.q}</div><div class="options">`
+  q.options.forEach((o, index) => {
+    html += `<div class="option" onclick="selectOption(this, ${index})">${o}</div>`;
+  });
 
-q.options.forEach((o,index)=>{
-html+=`<div class="option" onclick="select(this,${index})">${o}</div>`
-})
+  html += `
+      </div>
+      <div class="explanation" id="exp"></div>
+    </div>
+  `;
 
-html+=`</div><div class="explanation" id="exp"></div>`
-
-quiz.innerHTML=html
-
-bar.style.width=(i/data.length*100)+"%"
-
+  quiz.innerHTML = html;
 }
 
-function select(el,index){
-
-document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"))
-
-el.classList.add("selected")
-
-selected=index
-
+function selectOption(el, index){
+  if(locked) return;
+  document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+  el.classList.add("selected");
+  selected = index;
 }
 
-next.onclick=function(){
+window.selectOption = selectOption;
 
-if(selected===null){
-alert("Choose an option")
-return
+next.onclick = function(){
+  if(locked) return;
+
+  if(selected === null){
+    alert("Choose an option first.");
+    return;
+  }
+
+  locked = true;
+  const q = data[i];
+  const opts = document.querySelectorAll(".option");
+
+  if(selected === q.a){
+    score++;
+    opts[selected].classList.add("correct");
+  }else{
+    opts[selected].classList.add("wrong");
+    opts[q.a].classList.add("correct");
+  }
+
+  scoreLive.textContent = `Score: ${score}`;
+  document.getElementById("exp").innerText = q.exp;
+  next.textContent = i === data.length - 1 ? "Show Result" : "Next Question";
+
+  setTimeout(() => {
+    i++;
+    if(i < data.length){
+      load();
+    }else{
+      showResult();
+    }
+  }, 1300);
+};
+
+quit.onclick = function(){
+  if(confirm("Are you sure you want to quit the quiz?")){
+    location.reload();
+  }
+};
+
+function getMessage(percent){
+  if(percent === 100) return "Excellent. You actually understand RAG properly.";
+  if(percent >= 75) return "Strong result. Your fundamentals are solid.";
+  if(percent >= 50) return "Decent, but there are gaps you should fix.";
+  return "Weak score. You need better understanding of retrieval and grounding.";
 }
 
-let q=data[i]
-let opts=document.querySelectorAll(".option")
+function showResult(){
+  const percent = Math.round((score / data.length) * 100);
+  bar.style.width = "100%";
 
-if(selected===q.a){
-score++
-opts[selected].classList.add("correct")
-}else{
-opts[selected].classList.add("wrong")
-opts[q.a].classList.add("correct")
+  quiz.innerHTML = `
+    <div class="result">
+      <h2>Quiz Complete</h2>
+      <div class="score-ring" style="--percent:${percent}%">
+        <span>${percent}%</span>
+      </div>
+      <p><strong>Score:</strong> ${score} / ${data.length}</p>
+      <p>${getMessage(percent)}</p>
+      <button onclick="location.reload()">Restart Quiz</button>
+    </div>
+  `;
+
+  next.style.display = "none";
+  quit.style.display = "none";
 }
 
-document.getElementById("exp").innerText=q.exp
-
-setTimeout(()=>{
-
-i++
-
-if(i<data.length){
-load()
-}else{
-show()
-}
-
-},1200)
-
-}
-
-function show(){
-
-bar.style.width="100%"
-
-quiz.innerHTML=`
-<div class="result">
-Score: ${score} / ${data.length}
-<br><br>
-<button onclick="location.reload()">Restart</button>
-</div>
-`
-
-next.style.display="none"
-
-}
-
-load()
-
+load();
 </script>
 
 </body>
